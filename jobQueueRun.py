@@ -34,6 +34,27 @@ def main():
         jobFile.close()
         return
 
+    #Rewriting job file here to avoid an infinite reboot loop if something catastrophic happens in the job
+    ##Remove executed job from list
+    jobs = jobs[1:]
+
+    nextJob = ''
+
+    while jobs and not nextJob:
+        #Ignore empty lines
+        if not jobs[0]:
+            jobs = jobs[1:]
+        else:
+            nextJob = jobs[0]
+    
+    ##Write new jobs to list using trick from https://stackoverflow.com/questions/6648493/how-to-open-a-file-for-both-reading-and-writing
+    jobFile.seek(0)
+    for job in jobs:
+        jobFile.write(job + '\n')
+    jobFile.truncate()
+    jobFile.close()
+
+    #Execute Job
     hostname = platform.node()
 
     #From https://unix.stackexchange.com/questions/396630/the-proper-way-to-test-if-a-service-is-running-in-a-script
@@ -62,27 +83,8 @@ def main():
     else:
         slackStatusPost('*Job Errored :x:*\nHost: ' + hostname + '\n' + 'Time: ' + str(cur_time))
 
-    #Remove executed job from list
-    jobs = jobs[1:]
-
-    nextJob = ''
-
-    while jobs and not nextJob:
-        #Ignore empty lines
-        if not jobs[0]:
-            jobs = jobs[1:]
-        else:
-            nextJob = jobs[0]
-    
-    #Write new jobs to list using trick from https://stackoverflow.com/questions/6648493/how-to-open-a-file-for-both-reading-and-writing
-    jobFile.seek(0)
-    for job in jobs:
-        jobFile.write(job + '\n')
-    jobFile.truncate()
-    jobFile.close()
-
     #Reboot if there is another job
-    if jobs:
+    if nextJob:
         print('\nNext Job: ' + nextJob)
         slackStatusPost('*Job Runner Next Job*\nHost: ' + hostname + '\nCMD: ' + nextJob + '\nRebooting ...')
         subprocess.call('sudo reboot', shell=True, executable='/bin/bash')
