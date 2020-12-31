@@ -62,7 +62,7 @@ def main():
 
     if systemctlCode != 0:
         print('Warning! setupCPUForDSP.service did not run!')
-        slackStatusPost('Warning! setupCPUForDSP.service did not run on ' + hostname)
+        slackStatusPost('*Warning! :warning:*\nsetupCPUForDSP.service did not run on ' + hostname)
 
     cur_time = datetime.datetime.now()
     print("Starting: {}\n".format(str(cur_time)))
@@ -83,8 +83,8 @@ def main():
     else:
         slackStatusPost('*Job Errored :x:*\nHost: ' + hostname + '\n' + 'Time: ' + str(cur_time))
 
-    #Reboot if there is another job
-    if nextJob:
+    #Reboot if there is another job and the last job did not fail
+    if nextJob and rtnCode == 0:
         print('\nNext Job: ' + nextJob)
         slackStatusPost('*Job Runner Next Job*\nHost: ' + hostname + '\nCMD: ' + nextJob + '\nRebooting ...')
         subprocess.call('sudo reboot', shell=True, executable='/bin/bash')
