@@ -66,7 +66,7 @@ def main():
 
     cur_time = datetime.datetime.now()
     print("Starting: {}\n".format(str(cur_time)))
-    slackStatusPost('*Job Runner Executing*\nHost: ' + hostname + '\nTime: ' + str(cur_time) + '\nCMD: ' + cmd)
+    slackStatusPost('*Job Runner Executing*\nHost: ' + hostname + '\nTime: ' + str(cur_time) + '\nCMD: `' + cmd + '`')
 
     print('\nRunning: {}\n'.format(cmd))
 
@@ -86,7 +86,7 @@ def main():
     #Reboot if there is another job and the last job did not fail
     if nextJob and rtnCode == 0:
         print('\nNext Job: ' + nextJob)
-        slackStatusPost('*Job Runner Next Job*\nHost: ' + hostname + '\nCMD: ' + nextJob + '\nRebooting ...')
+        slackStatusPost('*Job Runner Next Job*\nHost: ' + hostname + '\nCMD: `' + nextJob + '`\nRebooting ...')
         subprocess.call('sudo reboot', shell=True, executable='/bin/bash')
 
 if __name__ == "__main__":

@@ -13,7 +13,7 @@ After=network-online.target ssh.service setupCPUForDSP.service
 [Service]
 User=YOURUSERNAME
 ExecStart=JOBQUEUERUN.SH_LOCATION
-Type=oneshot
+Type=idle #Want this to run after other systemd jobs have dispatched
 RemainAfterExit=yes
 TimeoutSec=600
 
