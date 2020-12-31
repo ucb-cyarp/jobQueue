@@ -5,7 +5,7 @@ oldDir=$(pwd)
 scriptSrc=$(dirname "${BASH_SOURCE[0]}")
 cd $scriptSrc
 
-source ~/secretkey.sh
+source $scriptSrc/secretkey.sh
 python3 jobQueueRun.py
 
 cd $oldDir

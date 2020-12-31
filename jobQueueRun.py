@@ -15,28 +15,26 @@ from slackUtils import *
 
 def main():
     #Open Jobs to run
-    jobFile = open('jobQueue.txt', 'a+')
+    jobFile = open('./jobQueue.txt', 'r+')
     jobs = []
     for line in jobFile:
         jobs.append(line.strip())
 
-    if not jobs:
-        print('No Jobs Pending to Run')
-        jobFile.close()
-        return
-
     cmd = ''
 
-    while jobs or cmd:
+    while jobs and not cmd:
         #Ignore empty lines
         if not jobs[0]:
             jobs = jobs[1:]
         else:
             cmd = jobs[0]
 
-    hostname = platform.node()
+    if not cmd:
+        print('No Jobs Pending to Run')
+        jobFile.close()
+        return
 
-    cmd = jobs[0]
+    hostname = platform.node()
 
     #From https://unix.stackexchange.com/questions/396630/the-proper-way-to-test-if-a-service-is-running-in-a-script
     systemctlCode = subprocess.call('systemctl is-active --quiet setupCPUForDSP.service', shell=True, executable='/bin/bash')
@@ -69,7 +67,7 @@ def main():
 
     nextJob = ''
 
-    while jobs or nextJob:
+    while jobs and not nextJob:
         #Ignore empty lines
         if not jobs[0]:
             jobs = jobs[1:]
@@ -80,14 +78,14 @@ def main():
     jobFile.seek(0)
     for job in jobs:
         jobFile.write(job + '\n')
-    jobFile.trunkate()
+    jobFile.truncate()
     jobFile.close()
 
     #Reboot if there is another job
     if jobs:
-        print('\nNext Job: ' + nextJob[0])
-        slackStatusPost('*Job Runner Next Job*\nHost: ' + hostname + '\nCMD: ' + nextJob[0] + '\nRebooting ...')
-        subprocess.call('reboot', shell=True, executable='/bin/bash')
+        print('\nNext Job: ' + nextJob)
+        slackStatusPost('*Job Runner Next Job*\nHost: ' + hostname + '\nCMD: ' + nextJob + '\nRebooting ...')
+        subprocess.call('sudo reboot', shell=True, executable='/bin/bash')
 
 if __name__ == "__main__":
     main()
