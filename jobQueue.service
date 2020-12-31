@@ -1,0 +1,21 @@
+#Based on https://gist.github.com/thomasfr/9707568
+#https://unix.stackexchange.com/questions/46235/how-does-reverse-ssh-tunneling-work
+#https://erik.torgesta.com/2013/12/creating-a-persistent-ssh-tunnel-in-ubuntu/
+#https://unix.stackexchange.com/questions/506347/why-do-most-systemd-examples-contain-wantedby-multi-user-target
+#https://www.digitalocean.com/community/tutorials/understanding-systemd-units-and-unit-files
+#https://askubuntu.com/questions/919054/how-do-i-run-a-single-command-at-startup-using-systemd
+#https://stackoverflow.com/questions/39871883/systemctl-status-shows-inactive-dead
+
+[Unit]
+Description=Job Queue Service
+After=network-online.target ssh.service setupCPUForDSP.service
+
+[Service]
+User=YOURUSERNAME
+ExecStart=JOBQUEUERUN.SH_LOCATION
+Type=oneshot
+RemainAfterExit=yes
+TimeoutSec=600
+
+[Install]
+WantedBy=multi-user.target

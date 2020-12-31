@@ -6,3 +6,5 @@ NOTE: This service should be run as a *unprivalaged* user as it stores commands 
 Commands to run must be contained in single lines.  Commands will be executed sequentially starting from the top.  Commands will be removed from the file as they are run
 
 Make sure to change the user to run these commands as.  A privalaged user will be required to enable the service.
+
+The user the commands are being run as need to be allowed to reboot the system.  See https://unix.stackexchange.com/questions/85663/poweroff-or-reboot-as-normal-user for an example of how to do that.  Using visudo with -f to specify a file in /etc/sudoers.d may be helpful.  Note that because of this, the job scheduler can create problems in multi-user environments.
