@@ -16,6 +16,7 @@ ExecStart=JOBQUEUERUN.SH_LOCATION
 Type=idle #Want this to run after other systemd jobs have dispatched
 RemainAfterExit=yes
 TimeoutSec=600
+LimitRTPRIO=99
 
 [Install]
 WantedBy=multi-user.target
