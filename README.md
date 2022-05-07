@@ -1,4 +1,6 @@
 # jobQueue
+Zenodo Concept DOI: [![Concept DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6526465.svg)](https://doi.org/10.5281/zenodo.6526465)
+
 A service for executing jobs where a reboot is required between them
 
 NOTE: This service should be run as a *unprivalaged* user as it stores commands to be run in a file which can be edited
